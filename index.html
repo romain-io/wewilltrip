@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+    	<title>Sprites animation</title>
+        <meta charset="utf-8">
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+		<script src="jquery.spritely-0.6.js" type="text/javascript"></script>
+		<link rel="stylesheet" type="text/css" href="design.css" />
+		
+		<script>
+		
+		
+		(function($) {
+		   
+		   	$(document).ready(function(){
+		   	
+		   		$('#hill2').pan({fps: 30, speed: 2, dir: 'left', depth: 30});
+		   		$('#hill1').pan({fps: 30, speed: 3, dir: 'left', depth: 70});
+		   		$('#hill1, #hill2').spStop();
+		   		
+		   		
+		   		
+		   		var canvas = $('#myCanvas');
+		   		var context = canvas.get(0).getContext("2d");
+		   		
+		   		canvas.attr("width", $(window).get(0).innerWidth);
+		   		
+		   		$(window).resize(resizeCanvas);
+		   		function resizeCanvas() {
+		   			canvas.attr("width", $(window).get(0).innerWidth);
+		   			calcFloor();
+		   		}
+		   		
+		   		var canvasWidth = canvas.width();
+		   		var canvasHeight = canvas.height();
+		   		var posLeft = true;
+		   		var posRight = false;
+		   		var running = false;
+		   		var runRight = false;
+		   		var runLeft = false;
+		   		var spriteX;
+		   		var spriteY;
+		   		var animBack = false;
+		   		var counter = 0;
+		   		var counterAnim = 0;
+		   		var arrowLeft = 37;
+		   		var arrowRight = 39;
+		   		var xFrames;
+		   		var posX = 250;
+		   		var exp = new RegExp("^[0-9]+$","g");
+		   		var floorRepetition;
+		   		
+		   		function calcFloor() {
+		   			floorRepetition = Math.ceil(canvasWidth/90) + 1;
+		   		};
+		   		
+		   		var image = new Image();
+		   		image.src = 'nu.png';
+		   		$(image).load(function(){
+		   			animate();
+		   			calcFloor();
+		   		});
+		   		
+		   		
+		   		
+		   		function animate() {
+		   			context.clearRect(0, 0, canvasWidth, canvasHeight);
+		   			if (exp.test(counter/5)) {
+		   				if (running) {
+		   					xFrames = 3;
+		   					if (counterAnim < xFrames) {
+		   						counterAnim++;
+		   					}
+		   					else {
+		   						counterAnim = 0;
+		   					}
+		   				}
+		   				else {
+		   					xFrames = 2;
+		   					if (!animBack) {
+		   						if (counterAnim < xFrames) {
+		   							counterAnim++;
+		   						}
+		   						else {
+		   							animBack = true;
+		   							counterAnim--;
+		   						}
+		   					}
+		   					else {
+		   						if (counterAnim > 0) {
+		   							counterAnim--;
+		   						}
+		   						else {
+		   							animBack = false;
+		   							counterAnim++;
+		   						}
+		   					}
+		   				}
+		   			}
+		   				
+		   			spriteX = counterAnim*100;
+		   			if (posLeft) {
+		   				spriteY = 0;
+		   				if (running) {
+		   					spriteY = 200;
+		   				}
+		   			}
+		   			if (posRight) {
+		   				spriteY = 100;
+		   				if (running) {
+		   					spriteY = 300;
+		   				}
+		   			}
+		   			if (runLeft) {
+		   				posX -= 5;
+		   			}
+		   			if (runRight) {
+		   				posX += 5;
+		   			}
+		   								
+		   			context.drawImage(image, spriteX, spriteY, 100, 100, posX, canvasHeight - 36 - 96, 100, 100);
+		   			for(i = 0; i < floorRepetition; i++) {
+		   				context.drawImage(image, 0, 400, 90, 36, 90*i, canvasHeight - 36, 90, 36);
+		   			}
+		   			
+		   			setTimeout(function(){
+		   				counter++;
+		   				animate();
+		   			},33);
+		   		};
+		   		
+		   		$(window).keydown(function(e){
+		   			var keyCode = e.keyCode;
+		   			
+		   			if (keyCode == arrowRight) {
+		   				posLeft = false;
+		   				posRight = true;
+		   				runRight = true;
+		   				running = true;
+		   				$('#hill1, #hill2').spChangeDir('left');
+		   				$('#hill1, #hill2').spStart();
+		   			}
+		   			else if (keyCode == arrowLeft) {
+		   				posRight = false;
+		   				posLeft = true;
+		   				runLeft = true;
+		   				running = true;
+		   				$('#hill1, #hill2').spChangeDir('right');
+		   				$('#hill1, #hill2').spStart();
+		   			}
+		   		});
+		   		
+		   		$(window).keyup(function(e){
+		   			var keyCode = e.keyCode;
+		   			$('#hill1, #hill2').spStop();
+		   			
+		   			if (keyCode == arrowRight) {
+		   				runRight = false;
+		   				running = false;
+		   			}
+		   			else if (keyCode == arrowLeft) {
+		   				runLeft = false;
+		   				running = false;
+		   			}
+		   		});
+		   						
+		   	});
+		})(jQuery);
+		
+		
+		</script>
+    </head>
+    <body>
+    	
+    	
+    	        <div id="hill2" class="stage"></div>
+    	        <div id="hill1" class="stage"></div>
+    	
+    	
+    	<canvas id="myCanvas"></canvas>
+    </body>
+</html>

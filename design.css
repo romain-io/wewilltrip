@@ -1,0 +1,36 @@
+@import url('reset.css');
+html {
+	margin: 0;
+	height: 100%;
+}
+
+body {
+	margin: 0;
+	height: 100%;
+}
+
+/*Personnage*/
+#myCanvas {
+	width: 100%;
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	
+}
+
+/*Parallax*/
+.stage {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    min-width: 900px;
+    height: 359px;
+    overflow: hidden;
+}
+#hill2 {
+    background: transparent url('hill2.png') 0 258px repeat-x;
+}
+#hill1 {
+    background: transparent url('hill-with-windmill.png') 0 104px repeat-x;
+}
